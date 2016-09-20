@@ -13,6 +13,7 @@ from flask_appbuilder import SQLA, AppBuilder, IndexView
 from flask_appbuilder.baseviews import expose
 from flask_cache import Cache
 from flask_migrate import Migrate
+from werkzeug.contrib.fixers import ProxyFix
 
 from caravel import version
 
@@ -49,6 +50,9 @@ if app.config.get('ENABLE_TIME_ROTATE'):
 if app.config.get('ENABLE_CORS'):
     from flask_cors import CORS
     CORS(app, **app.config.get('CORS_OPTIONS'))
+
+if app.config.get('ENABLE_PROXY_FIX'):
+    app.wsgi_app = ProxyFix(app.wsgi_app)
 
 
 class MyIndexView(IndexView):
